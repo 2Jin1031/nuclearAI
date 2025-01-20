@@ -2,15 +2,15 @@
 import pandas as pd
 from joblib import dump
 
-dataset= pd.read_csv('dataset.csv')
+dataset = pd.read_csv('dataset.csv')
 dataset.columns = dataset.columns.astype(str)
 
 from sklearn.model_selection import train_test_split
+
 x_train = dataset.iloc[:, 2:]
 y_train = dataset.iloc[:, 1]
 
 x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size=0.2, random_state=2025)
-
 
 from sklearn.ensemble import GradientBoostingClassifier
 
