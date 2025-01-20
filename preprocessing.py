@@ -1,8 +1,4 @@
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 ############## 모든 파일 하나의 데이터셋으로
 import os
@@ -65,8 +61,6 @@ para_list = list(numeric_dataset)
 # min, max 값 구해줍니다 =============================================================================
 para_min = [dataset[para].min() for para in para_list]
 para_max = [dataset[para].max() for para in para_list]
-# print(para_min)
-# print(para_max)
 
 for i, para in enumerate(para_list):
     dataset[para] = minmax(dataset[para], para_min[i], para_max[i])
