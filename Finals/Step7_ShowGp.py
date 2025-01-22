@@ -23,13 +23,13 @@ if __name__ == "__main__":
         
         # 케이스별 변수 설정
         do_pca = True
-        selected_variables = 
+        selected_variables = ['ZINST22', 'UCTMT', 'WSTM1', 'WSTM2', 'WSTM3', 'ZINST102']
 
         selected_cols = ['KCNTOMS'] + selected_variables
         need_data = data[selected_cols]
         etc_data = data.drop(columns=selected_cols)
         
-        pca = joblib.load('setting/files_by_cases/pca_transformer.joblib') # 선택한 케이스의 pca 변환기 로드
+        pca = joblib.load('Finals/setting/files_by_cases/pca_transformer_case3.joblib') # 선택한 케이스의 pca 변환기 로드
         etc_data_arr = pca.transform(etc_data)
         
         etc_index = [f'extra value {i}' for i in range(10)]
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
 
         # minmax 수행
-        minmax_db = pd.read_csv('setting/files_by_cases/minmax.csv') # 선택한 케이스의 minmax 변환기 로드
+        minmax_db = pd.read_csv('Finals/setting/files_by_cases/minmax_case3.csv') # 선택한 케이스의 minmax 변환기 로드
 
         para_list = list(minmax_db.columns)
         para_min = list(minmax_db.iloc[0])
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         return data
 
 
-    cnsenv = CommunicatorCNS(com_ip='172.30.1.75', com_port=7132)
+    cnsenv = CommunicatorCNS(com_ip='192.168.0.33', com_port=7132)
     para_list = ['KCNTOMS', 'KBCDO23', 'ZINST58']
     para_min = [0, 7, 101.3265609741211]
     para_max = [52, 99, 156.2834014892578]
@@ -112,9 +112,10 @@ if __name__ == "__main__":
 
             input = input_transform(input)  # 학습에서 사용했던 방식으로 입력 처리
 
-            model = joblib.load('setting/model.joblib') # 모델 선택
+            model = joblib.load('Finals/setting/files_by_cases/model_GradientBoostingClassifier()_dataset_case3.joblib') # 모델 선택
             out = model.predict(input)
             soft_out = model.predict_proba(input)
+            soft_out = list(soft_out.flatten())
 
             # 그래프 데이터 저장
             sim_time.append(cnsenv.mem['KCNTOMS']['Val'])
@@ -124,7 +125,7 @@ if __name__ == "__main__":
             net_out_MSLB_inside.append(soft_out[3])
             net_out_MSLB_outside.append(soft_out[4])
 
-            NetDiag = {0: "Normal", 1: "LOCA", 2: "SGTR", 3: "MSLB inside", 4: "MSLB outside"}[out]
+            NetDiag = {0: "Normal", 1: "LOCA", 2: "SGTR", 3: "MSLB inside", 4: "MSLB outside"}[out[0]]
 
             with open('GP_Result_team.csv', 'a') as f:
                 f.write(

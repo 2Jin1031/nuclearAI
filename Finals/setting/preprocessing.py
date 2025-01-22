@@ -10,7 +10,7 @@ class make_dataset:
 
 
     def combine_data(self, class_num):
-        file_path = '../../data/' + self.label[class_num]
+        file_path = './data/' + self.label[class_num]
         file_list = os.listdir(file_path)
         dataset = pd.DataFrame()
         for file in file_list:
